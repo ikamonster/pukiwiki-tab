@@ -9,7 +9,9 @@
 
 ## インストール
 
-tab.inc.php を PukiWiki の plugin ディレクトリに配置してください。
+下記GitHubページからダウンロードした tab.inc.php を PukiWiki の plugin ディレクトリに配置してください。
+
+[https://github.com/ikamonster/pukiwiki-tab](https://github.com/ikamonster/pukiwiki-tab)
 
 ## 使い方
 
