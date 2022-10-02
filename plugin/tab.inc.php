@@ -1,7 +1,7 @@
 <?php
 /*
 PukiWiki - Yet another WikiWikiWeb clone.
-tab.inc.php, v1.2 2020 M.Taniguchi
+tab.inc.php, v1.2.1 2020 M.Taniguchi
 License: GPL v3 or (at your option) any later version
 
 ページをタブ表示するプラグイン。
@@ -115,7 +115,7 @@ function plugin_tab_convert() {
 	margin-top: 1.5em;
 }
 /* その他調整 */
-#${noteId} { display:none };
+#{$noteId} { display:none };
 </style>
 EOT;
 
@@ -135,7 +135,7 @@ var	__PluginTab__ = function() {
 	this.data = [];		// ページ情報
 
 	// 最初のタブのページ情報はあらかじめ設定
-//	this.data['${page}'] = ${data};
+//	this.data['{$page}'] = {$data};
 
 	window.addEventListener('DOMContentLoaded', function(){
 		// URLに「#タブページ名」指定あり？
@@ -146,9 +146,9 @@ var	__PluginTab__ = function() {
 			self.change(ele);
 		} else {
 			// ありならデフォルトタブページ表示
-			self.loadPage('${page}');
+			self.loadPage('{$page}');
 		}
-		self.note = document.getElementById('${noteId}');
+		self.note = document.getElementById('{$noteId}');
 		self.note.style.display = 'none';
 	});
 };
@@ -161,7 +161,7 @@ __PluginTab__.prototype.change = function(ele) {
 	var	page = ele.getAttribute('data-page');	// クリックされたタブに対応するページ名を取得
 
 	// URLに「#タブページ名」を設定
-	window.location.href = '#' + ((page != '${page}')? page : '');
+	window.location.href = '#' + ((page != '{$page}')? page : '');
 
 	// タブに選択中属性を設定
 	for (var i = self.tabs.length - 1; i >= 0; --i) self.tabs[i].removeAttribute('data-active');
@@ -182,9 +182,9 @@ __PluginTab__.prototype.loadPage = function(page) {
 	} else {
 		// ページ情報をロードして表示
 		var xhr = new XMLHttpRequest();
-		xhr.open('${method}', '${script}?plugin=tab&refer=' + page);	// plugin_tab_action()へ要求
+		xhr.open('{$method}', '{$script}?plugin=tab&refer=' + page);	// plugin_tab_action()へ要求
 		xhr.responseType = 'json';
-		if (${timeout} > 0) xhr.timeout = Math.max(${timeout}, 1000);
+		if ({$timeout} > 0) xhr.timeout = Math.max({$timeout}, 1000);
 		xhr.onload = function() {
 			if (xhr.status == 200 && xhr.response) {
 				self.data[page] = xhr.response;	// ページ情報を記憶しておき、次回からロードを省略する
@@ -222,7 +222,7 @@ __PluginTab__.prototype.makeHTML = function(element, html) {
 // ページ遷移（タブダブルクリックハンドラ）
 __PluginTab__.prototype.move = function(ele) {
 	var	page = ele.getAttribute('data-page');	// ダブルクリックされたタブに対応するページ名を取得
-	window.location.href = '${script}?' + page;	// 画面遷移
+	window.location.href = '{$script}?' + page;	// 画面遷移
 };
 
 // 注釈書き換え
