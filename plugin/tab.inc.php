@@ -1,7 +1,7 @@
 <?php
 /*
 PukiWiki - Yet another WikiWikiWeb clone.
-tab.inc.php, v1.2.1 2020 M.Taniguchi
+tab.inc.php, v1.3 2020 M.Taniguchi
 License: GPL v3 or (at your option) any later version
 
 ページをタブ表示するプラグイン。
@@ -74,7 +74,7 @@ function plugin_tab_convert() {
 			$v[1] = trim($v[1]);
 		}
 		$id = urlencode($v[1]);
-		$tabs .= '<li id="PluginTab-' . $id . '" class="PluginTab" data-page="' . $id . '" onclick="__pluginTab__.change(this);"' . ((PLUGIN_TAB_ALLOW_DOUBLECLICK)? ' ondblclick="__pluginTab__.move(this);"' : '') . ((!$page)? ' data-active="1"' : '') . '>' . htmlsc(trim($v[0])) . '</li>';
+		$tabs .= '<li id="PluginTab-' . $id . '" class="PluginTab" data-page="' . $id . '" onclick="__pluginTab__.change(this);" onkeypress="__pluginTab__.change(this);"' . ((PLUGIN_TAB_ALLOW_DOUBLECLICK)? ' ondblclick="__pluginTab__.move(this);"' : '') . ((!$page)? ' data-active="1"' : '') . ' tabindex="0">' . htmlsc(trim($v[0])) . '</li>';
 		if (!$page) $page = $v[1];
 	}
 	$tabs = '<ul id="PluginTabs">' . $tabs . '</ul>';
@@ -104,6 +104,11 @@ function plugin_tab_convert() {
 	border-radius: 8px 8px 0 0;
 	text-align: center;
 	cursor: pointer;
+}
+/* マウスオーバー */
+.PluginTab:hover {
+	text-decoration-line: underline;
+	text-decoration-style: solid;
 }
 /* 選択中タブ */
 .PluginTab[data-active='1'] {
