@@ -1,7 +1,7 @@
 <?php
 /*
 PukiWiki - Yet another WikiWikiWeb clone.
-tab.inc.php, v1.3.1 2020 M.Taniguchi
+tab.inc.php, v1.3.2 2020 M.Taniguchi
 License: GPL v3 or (at your option) any later version
 
 ページをタブ表示するプラグイン。
@@ -101,7 +101,7 @@ function plugin_tab_convert() {
 	box-sizing: border-box;
 	border: 0 solid #808080;
 	border-width: 1px 1px 0;
-	border-radius: 8px 8px 0 0;
+	border-radius: .5em .5em 0 0;
 	text-align: center;
 	cursor: pointer;
 }
@@ -112,8 +112,8 @@ function plugin_tab_convert() {
 }
 /* 選択中タブ */
 .PluginTab[data-active='1'] {
-	font-weight: bold;
 	cursor: auto;
+	border-top: .5em solid currentColor;
 }
 /* ページ表示領域 */
 #PluginTabContent {
