@@ -1,7 +1,7 @@
 <?php
 /*
 PukiWiki - Yet another WikiWikiWeb clone.
-tab.inc.php, v1.3 2020 M.Taniguchi
+tab.inc.php, v1.3.1 2020 M.Taniguchi
 License: GPL v3 or (at your option) any later version
 
 ページをタブ表示するプラグイン。
@@ -132,7 +132,7 @@ EOT;
 <script>/*<!--*/
 'use strict';
 
-var	__PluginTab__ = function() {
+const __PluginTab__ = function() {
 	const	self = this;
 	this.content = document.getElementById('PluginTabContent');	// ページ表示領域要素
 	this.tabs = document.getElementsByClassName('PluginTab');	// タブ要素
@@ -144,10 +144,10 @@ var	__PluginTab__ = function() {
 
 	window.addEventListener('DOMContentLoaded', function(){
 		// URLに「#タブページ名」指定あり？
-		var path = location.href.split('#');
+		const path = location.href.split('#');
 		if (path[1] != undefined && path[1]) {
 			// ありならタブ切り替え
-			var	ele = document.getElementById('PluginTab-' + path[1]);
+			const	ele = document.getElementById('PluginTab-' + path[1]);
 			self.change(ele);
 		} else {
 			// ありならデフォルトタブページ表示
@@ -160,16 +160,17 @@ var	__PluginTab__ = function() {
 
 // タブ切り替え（タブクリックハンドラ）
 __PluginTab__.prototype.change = function(ele) {
+	if (!ele) return false;
 	const	self = this;
 
 	if (ele.getAttribute('data-active')) return;	// すでに選択中のタブなら無視
-	var	page = ele.getAttribute('data-page');	// クリックされたタブに対応するページ名を取得
+	const	page = ele.getAttribute('data-page');	// クリックされたタブに対応するページ名を取得
 
 	// URLに「#タブページ名」を設定
 	window.location.href = '#' + ((page != '{$page}')? page : '');
 
 	// タブに選択中属性を設定
-	for (var i = self.tabs.length - 1; i >= 0; --i) self.tabs[i].removeAttribute('data-active');
+	for (let i = self.tabs.length - 1; i >= 0; --i) self.tabs[i].removeAttribute('data-active');
 	ele.setAttribute('data-active', '1');
 
 	this.loadPage(page);
@@ -177,6 +178,7 @@ __PluginTab__.prototype.change = function(ele) {
 
 // タブ表示
 __PluginTab__.prototype.loadPage = function(page) {
+	if (!page) return false;
 	const	self = this;
 
 	// ロード済みのページか？
@@ -186,7 +188,7 @@ __PluginTab__.prototype.loadPage = function(page) {
 		self.changeNote(self.data[page]['explain']);
 	} else {
 		// ページ情報をロードして表示
-		var xhr = new XMLHttpRequest();
+		const xhr = new XMLHttpRequest();
 		xhr.open('{$method}', '{$script}?plugin=tab&refer=' + page);	// plugin_tab_action()へ要求
 		xhr.responseType = 'json';
 		if ({$timeout} > 0) xhr.timeout = Math.max({$timeout}, 1000);
@@ -204,13 +206,13 @@ __PluginTab__.prototype.loadPage = function(page) {
 
 // Script実行付きinnerHTML（注：document.write()には非対応）
 __PluginTab__.prototype.makeHTML = function(element, html) {
-	var regexp = /<script[^>]+?\/>|<script(.|\s)*?\/script>/gi;
-	var scripts = html.match(regexp);
+	const regexp = /<script[^>]+?\/>|<script(.|\s)*?\/script>/gi;
+	const scripts = html.match(regexp);
 	if (scripts) {
 		element.innerHTML = html.replace(regexp, '');
 		scripts.forEach(function(script) {
-			var scriptElement = document.createElement('script');
-			var	src = script.match(/<script[^>]+src=['"]?([^'"\s]+)[\s'"]?/i);
+			const	scriptElement = document.createElement('script');
+			const	src = script.match(/<script[^>]+src=['"]?([^'"\s]+)[\s'"]?/i);
 			if (src && src.length >= 1) {
 				scriptElement.src = src[1];
 				scriptElement.setAttribute('defer', 'defer');
@@ -226,7 +228,7 @@ __PluginTab__.prototype.makeHTML = function(element, html) {
 
 // ページ遷移（タブダブルクリックハンドラ）
 __PluginTab__.prototype.move = function(ele) {
-	var	page = ele.getAttribute('data-page');	// ダブルクリックされたタブに対応するページ名を取得
+	const	page = ele.getAttribute('data-page');	// ダブルクリックされたタブに対応するページ名を取得
 	window.location.href = '{$script}?' + page;	// 画面遷移
 };
 
@@ -235,7 +237,7 @@ __PluginTab__.prototype.changeNote = function(data) {
 	const	self = this;
 
 	if (self.note) {
-		var	explain = '';
+		let	explain = '';
 		if (data) data.forEach(function(v){ explain += v; });
 		if (explain) {
 			self.note.innerHTML = '<hr class="note_hr"/>' + explain;
@@ -247,7 +249,7 @@ __PluginTab__.prototype.changeNote = function(data) {
 	}
 };
 
-var __pluginTab__ = new __PluginTab__();
+const __pluginTab__ = new __PluginTab__();
 /*-->*/</script>
 EOT;
 
