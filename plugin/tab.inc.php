@@ -1,7 +1,7 @@
 <?php
 /*
 PukiWiki - Yet another WikiWikiWeb clone.
-tab.inc.php, v1.3.2 2020 M.Taniguchi
+tab.inc.php, v1.3.3 2020 M.Taniguchi
 License: GPL v3 or (at your option) any later version
 
 ページをタブ表示するプラグイン。
@@ -77,7 +77,7 @@ function plugin_tab_convert() {
 		$tabs .= '<li id="PluginTab-' . $id . '" class="PluginTab" data-page="' . $id . '" onclick="__pluginTab__.change(this);" onkeypress="__pluginTab__.change(this);"' . ((PLUGIN_TAB_ALLOW_DOUBLECLICK)? ' ondblclick="__pluginTab__.move(this);"' : '') . ((!$page)? ' data-active="1"' : '') . ' tabindex="0">' . htmlsc(trim($v[0])) . '</li>';
 		if (!$page) $page = $v[1];
 	}
-	$tabs = '<ul id="PluginTabs">' . $tabs . '</ul>';
+	$tabs = '<div><ul id="PluginTabs">' . $tabs . '</ul></div>';
 
 	$page = urlencode($page);
 	$noteId = (PLUGIN_TAB_NOTEID)? PLUGIN_TAB_NOTEID : 'note';
@@ -117,7 +117,7 @@ function plugin_tab_convert() {
 }
 /* ページ表示領域 */
 #PluginTabContent {
-	margin-top: 1.5em;
+	margin-top: 1.333em;
 }
 /* その他調整 */
 #{$noteId} { display:none };
@@ -255,7 +255,7 @@ EOT;
 
 	$foot_explain = array(1 => '&#8203;');	// 注釈表示ブロックを生成させるためダミーの注釈を設定
 
-	return ((PLUGIN_TAB_ALLOW_DEFAULTSTYLE)? $style : '') . $tabs . '<section id="PluginTabContent"></section>' . $jscode;
+	return $tabs . '<section id="PluginTabContent"></section>' . ((PLUGIN_TAB_ALLOW_DEFAULTSTYLE)? $style : '') . $jscode;
 }
 
 
