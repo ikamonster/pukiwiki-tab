@@ -1,7 +1,7 @@
 <?php
 /*
 PukiWiki - Yet another WikiWikiWeb clone.
-tab.inc.php, v1.3.3 2020 M.Taniguchi
+tab.inc.php, v1.3.4 2020 M.Taniguchi
 License: GPL v3 or (at your option) any later version
 
 ページをタブ表示するプラグイン。
@@ -134,23 +134,23 @@ EOT;
 
 const __PluginTab__ = function() {
 	const	self = this;
-	this.content = document.getElementById('PluginTabContent');	// ページ表示領域要素
-	this.tabs = document.getElementsByClassName('PluginTab');	// タブ要素
-	this.note = null;	// 注釈表示領域要素
-	this.data = [];		// ページ情報
+	this.content = document.getElementById('PluginTabContent');	/* ページ表示領域要素 */
+	this.tabs = document.getElementsByClassName('PluginTab');	/* タブ要素 */
+	this.note = null;	/* 注釈表示領域要素 */
+	this.data = [];		/* ページ情報 */
 
-	// 最初のタブのページ情報はあらかじめ設定
-//	this.data['{$page}'] = {$data};
+	/* 最初のタブのページ情報はあらかじめ設定 */
+/*	this.data['{$page}'] = {$data};*/
 
 	window.addEventListener('DOMContentLoaded', function(){
-		// URLに「#タブページ名」指定あり？
+		/* URLに「#タブページ名」指定あり？ */
 		const path = location.href.split('#');
 		if (path[1] != undefined && path[1]) {
-			// ありならタブ切り替え
+			/* ありならタブ切り替え */
 			const	ele = document.getElementById('PluginTab-' + path[1]);
 			self.change(ele);
 		} else {
-			// ありならデフォルトタブページ表示
+			/* ありならデフォルトタブページ表示 */
 			self.loadPage('{$page}');
 		}
 		self.note = document.getElementById('{$noteId}');
@@ -158,44 +158,44 @@ const __PluginTab__ = function() {
 	});
 };
 
-// タブ切り替え（タブクリックハンドラ）
+/* タブ切り替え（タブクリックハンドラ） */
 __PluginTab__.prototype.change = function(ele) {
 	if (!ele) return false;
 	const	self = this;
 
-	if (ele.getAttribute('data-active')) return;	// すでに選択中のタブなら無視
-	const	page = ele.getAttribute('data-page');	// クリックされたタブに対応するページ名を取得
+	if (ele.getAttribute('data-active')) return;	/* すでに選択中のタブなら無視 */
+	const	page = ele.getAttribute('data-page');	/* クリックされたタブに対応するページ名を取得 */
 
-	// URLに「#タブページ名」を設定
+	/* URLに「#タブページ名」を設定 */
 	window.location.href = '#' + ((page != '{$page}')? page : '');
 
-	// タブに選択中属性を設定
+	/* タブに選択中属性を設定 */
 	for (let i = self.tabs.length - 1; i >= 0; --i) self.tabs[i].removeAttribute('data-active');
 	ele.setAttribute('data-active', '1');
 
 	this.loadPage(page);
 };
 
-// タブ表示
+/* タブ表示 */
 __PluginTab__.prototype.loadPage = function(page) {
 	if (!page) return false;
 	const	self = this;
 
-	// ロード済みのページか？
+	/* ロード済みのページか？ */
 	if (self.data[page] !== undefined) {
-		// ロード済みページ情報を表示
+		/* ロード済みページ情報を表示 */
 		self.makeHTML(self.content, self.data[page]['body']);
 		self.changeNote(self.data[page]['explain']);
 	} else {
-		// ページ情報をロードして表示
+		/* ページ情報をロードして表示 */
 		const xhr = new XMLHttpRequest();
-		xhr.open('{$method}', '{$script}?plugin=tab&refer=' + page);	// plugin_tab_action()へ要求
+		xhr.open('{$method}', '{$script}?plugin=tab&refer=' + page);	/* plugin_tab_action()へ要求 */
 		xhr.responseType = 'json';
 		if ({$timeout} > 0) xhr.timeout = Math.max({$timeout}, 1000);
 		xhr.onload = function() {
 			if (xhr.status == 200 && xhr.response) {
-				self.data[page] = xhr.response;	// ページ情報を記憶しておき、次回からロードを省略する
-				if (typeof self.data[page] === 'string') self.data[page] = JSON.parse(self.data[page]);	// IE対策
+				self.data[page] = xhr.response;	/* ページ情報を記憶しておき、次回からロードを省略する */
+				if (typeof self.data[page] === 'string') self.data[page] = JSON.parse(self.data[page]);	/* IE対策 */
 				self.makeHTML(self.content, self.data[page]['body']);
 				self.changeNote(self.data[page]['explain']);
 			}
@@ -204,7 +204,7 @@ __PluginTab__.prototype.loadPage = function(page) {
 	}
 };
 
-// Script実行付きinnerHTML（注：document.write()には非対応）
+/* Script実行付きinnerHTML（注：document.write()には非対応） */
 __PluginTab__.prototype.makeHTML = function(element, html) {
 	const regexp = /<script[^>]+?\/>|<script(.|\s)*?\/script>/gi;
 	const scripts = html.match(regexp);
@@ -226,13 +226,13 @@ __PluginTab__.prototype.makeHTML = function(element, html) {
 	}
 };
 
-// ページ遷移（タブダブルクリックハンドラ）
+/* ページ遷移（タブダブルクリックハンドラ） */
 __PluginTab__.prototype.move = function(ele) {
-	const	page = ele.getAttribute('data-page');	// ダブルクリックされたタブに対応するページ名を取得
-	window.location.href = '{$script}?' + page;	// 画面遷移
+	const	page = ele.getAttribute('data-page');	/* ダブルクリックされたタブに対応するページ名を取得 */
+	window.location.href = '{$script}?' + page;	/* 画面遷移 */
 };
 
-// 注釈書き換え
+/* 注釈書き換え */
 __PluginTab__.prototype.changeNote = function(data) {
 	const	self = this;
 
@@ -255,7 +255,10 @@ EOT;
 
 	$foot_explain = array(1 => '&#8203;');	// 注釈表示ブロックを生成させるためダミーの注釈を設定
 
-	return $tabs . '<section id="PluginTabContent"></section>' . ((PLUGIN_TAB_ALLOW_DEFAULTSTYLE)? $style : '') . $jscode;
+	$body = $tabs . '<section id="PluginTabContent"></section>' . ((PLUGIN_TAB_ALLOW_DEFAULTSTYLE)? $style : '') . $jscode;
+
+	$body = preg_replace("/((\s|\n){1,})/i", ' ', $body);	// 連続空白を単一空白に（※「//」コメント非対応）
+	return $body;
 }
 
 
